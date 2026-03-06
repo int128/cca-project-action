@@ -1,7 +1,7 @@
 import type { Octokit } from '@octokit/action'
-import type { GetAssociatedPullRequestQuery, GetAssociatedPullRequestQueryVariables } from '../generated/graphql.js'
+import type { AddIssueToProjectMutation, AddIssueToProjectMutationVariables } from '../generated/graphql.js'
 
-const query = /* GraphQL */ `
+const mutation = /* GraphQL */ `
   mutation addIssueToProject($issueId: ID!, $projectId: ID!) {
     addProjectV2ItemById(input:  {
        contentId: $issueId,
@@ -9,12 +9,27 @@ const query = /* GraphQL */ `
     }) {
       item {
         id
+        fieldValues(first: 100) {
+          nodes {
+            __typename
+            ... on ProjectV2ItemFieldNumberValue {
+              field {
+                __typename
+                ... on ProjectV2Field {
+                  id
+                  name
+                }
+              }
+              number
+            }
+          }
+        }
       }
     }
   }
 `
 
-export const getProjectField = async (
+export const addIssueToProject = async (
   octokit: Octokit,
-  v: GetProjectFieldQueryVariables,
-): Promise<GetProjectFieldQuery> => await octokit.graphql(query, v)
+  v: AddIssueToProjectMutationVariables,
+): Promise<AddIssueToProjectMutation> => await octokit.graphql(mutation, v)
