@@ -36,7 +36,8 @@ jobs:
       - name: Run int128/cca-project-action
         uses: ./
         with:
-          name: foo
+          execution-file: tests/fixtures/execution_file.json
+          project-id: example
 
   generate:
     runs-on: ubuntu-latest
