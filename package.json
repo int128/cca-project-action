@@ -3,16 +3,23 @@
   "scripts": {
     "check": "biome migrate --write && biome check --fix",
     "build": "ncc build --source-map --license licenses.txt src/index.ts",
+    "graphql-codegen": "graphql-codegen --config graphql.config.ts",
     "test": "vitest"
   },
   "type": "module",
   "dependencies": {
     "@actions/core": "3.0.0",
     "@octokit/action": "8.0.4",
-    "@octokit/plugin-retry": "8.1.0"
+    "@octokit/plugin-retry": "8.1.0",
+    "graphql": "16.12.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.4",
+    "@graphql-codegen/cli": "6.1.1",
+    "@graphql-codegen/import-types-preset": "3.0.1",
+    "@graphql-codegen/typescript": "5.0.8",
+    "@graphql-codegen/typescript-operations": "5.0.8",
+    "@octokit/graphql-schema": "15.26.1",
     "@octokit/webhooks-types": "7.6.1",
     "@tsconfig/node20": "20.1.9",
     "@tsconfig/strictest": "2.0.8",

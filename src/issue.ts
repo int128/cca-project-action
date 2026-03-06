@@ -8,6 +8,7 @@ export type Issue = {
     repo: string
   }
   number: number
+  id: string
 }
 
 export const getCurrentIssue = async (octokit: Octokit, context: github.Context): Promise<Issue | undefined> => {
@@ -43,6 +44,7 @@ export const getCurrentIssue = async (octokit: Octokit, context: github.Context)
   return {
     repo: context.repo,
     number: pull.number,
+    id: pull.node_id,
   }
 }
 
@@ -57,5 +59,6 @@ const getIssue = async (octokit: Octokit, context: github.Context, issueNumber: 
   return {
     repo: context.repo,
     number: issue.number,
+    id: issue.node_id,
   }
 }
