@@ -17,17 +17,17 @@ jobs:
           # ...omitted...
       - uses: int128/cca-project-action@v1
         with:
-          project-id: ...
           execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
+          project-id: ...
 ```
 
 ### Inputs
 
 | Name                        | Default    | Description                                             |
 | --------------------------- | ---------- | ------------------------------------------------------- |
-| `project-id`                | (required) | The GitHub project ID.                                  |
-| `project-field-id-cost-usd` | -          | The GitHub project field ID for cost in USD.            |
 | `execution-file`            | (required) | The path to the execution file from claude-code-action. |
+| `project-id`                | -          | The GitHub project ID.                                  |
+| `project-field-id-cost-usd` | -          | The GitHub project field ID for cost in USD.            |
 | `token`                     | (required) | GitHub token.                                           |
 
 ### Outputs
