@@ -5,7 +5,9 @@ import { run } from './run.js'
 try {
   await run(
     {
-      name: core.getInput('name', { required: true }),
+      projectId: core.getInput('project-id', { required: true }),
+      projectFieldIdCostUsd: core.getInput('project-field-id-cost-usd'),
+      executionFile: core.getInput('execution-file', { required: true }),
     },
     getOctokit(),
     await getContext(),

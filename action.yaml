@@ -1,8 +1,14 @@
-name: typescript-action
-description: Template of TypeScript Action
+name: cca-project-action
+description: Aggregate claude-code-action issues to GitHub project
 inputs:
-  name:
-    description: Example
+  project-id:
+    description: GitHub project ID
+    required: true
+  project-field-id-cost-usd:
+    description: GitHub project field ID for cost USD
+    required: true
+  execution-file:
+    description: Path to the execution file from claude-code-action
     required: true
   token:
     description: GitHub token

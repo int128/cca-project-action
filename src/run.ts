@@ -1,20 +1,17 @@
 import * as core from '@actions/core'
 import type { Octokit } from '@octokit/action'
 import type { Context } from './github.js'
+import { getCurrentIssue } from './issue.js'
 
 type Inputs = {
-  name: string
+  projectId: string
+  projectFieldIdCostUsd: string
+  executionFile: string
 }
 
 export const run = async (inputs: Inputs, octokit: Octokit, context: Context): Promise<void> => {
-  core.info(`The name is ${inputs.name}`)
-
-  const { data: pulls } = await octokit.rest.repos.listPullRequestsAssociatedWithCommit({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    commit_sha: context.sha,
-  })
-  for (const pull of pulls) {
-    core.info(`Associated pull request: ${pull.html_url}`)
+  const issue = await getCurrentIssue(octokit, context)
+  if (issue === undefined) {
+    return
   }
 }
