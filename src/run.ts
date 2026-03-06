@@ -38,13 +38,13 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
     return
   }
 
-  const previousCostUsd = findFieldNumberValueById(addIssueToProjectMutation, inputs.projectFieldIdCostUsd)
-  core.info(`The cost-usd field is ${previousCostUsd === undefined ? 'not set' : `${previousCostUsd} USD`}`)
-  const cumulativeCostUsd = (previousCostUsd ?? 0) + execution.totalCostUsd
+  const costUsdFieldValue = findFieldNumberValueById(addIssueToProjectMutation, inputs.projectFieldIdCostUsd)
+  core.info(`The cost-usd field is ${costUsdFieldValue === undefined ? 'not set' : `${costUsdFieldValue} USD`}`)
+  const cumulativeCostUsd = (costUsdFieldValue ?? 0) + execution.totalCostUsd
   core.info(`The cumulative cost is ${cumulativeCostUsd} USD`)
 
   await updateProjectFieldNumberValue(octokit, {
-    issueId: issue.id,
+    itemId: addIssueToProjectMutation.addProjectV2ItemById?.item?.id ?? '',
     projectId: inputs.projectId,
     fieldId: inputs.projectFieldIdCostUsd,
     number: cumulativeCostUsd,
