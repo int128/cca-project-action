@@ -33,10 +33,10 @@ jobs:
       - run: pnpm run test
       - run: pnpm run build
 
-      - name: Run int128/typescript-action
+      - name: Run int128/cca-project-action
         uses: ./
         with:
-          name: foo
+          execution-file: tests/fixtures/execution_file.json
 
   generate:
     runs-on: ubuntu-latest
