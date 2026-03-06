@@ -9,9 +9,9 @@ import { addIssueToProject } from './queries/addIssueToProject.js'
 import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumberValue.js'
 
 type Inputs = {
-  projectId: string
-  projectFieldIdCostUsd: string
   executionFile: string
+  projectId: string | undefined
+  projectFieldIdCostUsd: string | undefined
 }
 
 export const run = async (inputs: Inputs, octokit: Octokit, context: Context): Promise<void> => {
@@ -24,11 +24,19 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   const execution = await parseExecutionFile(inputs.executionFile)
   core.info(`The cost of current workflow run is ${execution.totalCostUsd} USD`)
 
+  if (!inputs.projectId) {
+    return
+  }
+
   const addIssueToProjectMutation = await addIssueToProject(octokit, {
     issueId: issue.id,
     projectId: inputs.projectId,
   })
   core.info(`Added #${issue.number} to the project ${inputs.projectId}`)
+
+  if (!inputs.projectFieldIdCostUsd) {
+    return
+  }
 
   const previousCostUsd = findFieldNumberValueById(addIssueToProjectMutation, inputs.projectFieldIdCostUsd)
   core.info(`The cost-usd field is ${previousCostUsd === undefined ? 'not set' : `${previousCostUsd} USD`}`)

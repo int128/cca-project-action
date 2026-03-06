@@ -37,7 +37,6 @@ jobs:
         uses: ./
         with:
           execution-file: tests/fixtures/execution_file.json
-          project-id: example
 
   generate:
     runs-on: ubuntu-latest

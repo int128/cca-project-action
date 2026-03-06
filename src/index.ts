@@ -5,9 +5,9 @@ import { run } from './run.js'
 try {
   await run(
     {
-      projectId: core.getInput('project-id', { required: true }),
-      projectFieldIdCostUsd: core.getInput('project-field-id-cost-usd'),
       executionFile: core.getInput('execution-file', { required: true }),
+      projectId: core.getInput('project-id') || undefined,
+      projectFieldIdCostUsd: core.getInput('project-field-id-cost-usd') || undefined,
     },
     getOctokit(),
     await getContext(),
