@@ -47,9 +47,10 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
     itemId: addIssueToProjectMutation.addProjectV2ItemById?.item?.id ?? '',
     projectId: inputs.projectId,
     fieldId: inputs.projectFieldIdCostUsd,
-    number: cumulativeCostUsd,
+    // https://github.com/cli/cli/issues/10342
+    number: Math.trunc(cumulativeCostUsd * 1e8) / 1e8,
   })
-  core.info(`Updated the project field ${inputs.projectFieldIdCostUsd} to ${cumulativeCostUsd} USD`)
+  core.info(`Updated the project field ${inputs.projectFieldIdCostUsd}`)
 }
 
 const findFieldNumberValueById = (mutation: AddIssueToProjectMutation, fieldId: string) => {
