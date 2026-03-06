@@ -1,5 +1,8 @@
 import type { Octokit } from '@octokit/action'
-import type { UpdateProjectFieldNumberValueMutation, UpdateProjectFieldNumberValueMutationVariables } from '../generated/graphql.js'
+import type {
+  UpdateProjectFieldNumberValueMutation,
+  UpdateProjectFieldNumberValueMutationVariables,
+} from '../generated/graphql.js'
 
 const mutation = /* GraphQL */ `
   mutation updateProjectFieldNumberValue($issueId: ID!, $projectId: ID!, $fieldId: ID!, $number: Float) {

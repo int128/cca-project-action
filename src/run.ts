@@ -1,11 +1,11 @@
+import assert from 'node:assert'
 import * as core from '@actions/core'
 import type { Octokit } from '@octokit/action'
+import { parseExecutionFile } from './cca.js'
+import type { AddIssueToProjectMutation } from './generated/graphql.js'
 import type { Context } from './github.js'
 import { getCurrentIssue } from './issue.js'
-import { parseExecutionFile } from './cca.js'
 import { addIssueToProject } from './queries/addIssueToProject.js'
-import { AddIssueToProjectMutation } from './generated/graphql.js'
-import assert from 'node:assert'
 import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumberValue.js'
 
 type Inputs = {
