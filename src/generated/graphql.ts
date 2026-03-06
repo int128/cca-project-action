@@ -25,8 +25,8 @@ export type AddIssueToProjectMutation = { __typename?: 'Mutation', addProjectV2I
          | null> | null } } | null } | null };
 
 export type UpdateProjectFieldNumberValueMutationVariables = Types.Exact<{
-  issueId: Types.Scalars['ID']['input'];
   projectId: Types.Scalars['ID']['input'];
+  itemId: Types.Scalars['ID']['input'];
   fieldId: Types.Scalars['ID']['input'];
   number?: Types.InputMaybe<Types.Scalars['Float']['input']>;
 }>;

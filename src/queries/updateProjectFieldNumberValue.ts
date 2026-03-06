@@ -5,10 +5,10 @@ import type {
 } from '../generated/graphql.js'
 
 const mutation = /* GraphQL */ `
-  mutation updateProjectFieldNumberValue($issueId: ID!, $projectId: ID!, $fieldId: ID!, $number: Float) {
+  mutation updateProjectFieldNumberValue($projectId: ID!, $itemId: ID!, $fieldId: ID!, $number: Float) {
     updateProjectV2ItemFieldValue(input: {
       projectId: $projectId,
-      itemId: $issueId,
+      itemId: $itemId,
       fieldId: $fieldId,
       value:  {
         number: $number
