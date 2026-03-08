@@ -11,6 +11,7 @@ import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumbe
 type Inputs = {
   executionFile: string
   projectId: string | undefined
+  projectFieldIdCalls: string | undefined
   projectFieldIdCostUsd: string | undefined
 }
 
@@ -22,7 +23,7 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
 
   core.info(`Parsing the execution file: ${inputs.executionFile}`)
   const execution = await parseExecutionFile(inputs.executionFile)
-  core.info(`The cost of current workflow run is ${execution.totalCostUsd} USD`)
+  core.info(`The cost of current workflow run is ${execution.costUsd} USD`)
 
   if (!inputs.projectId) {
     return
@@ -34,23 +35,71 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   })
   core.info(`Added #${issue.number} to the project ${inputs.projectId}`)
 
-  if (!inputs.projectFieldIdCostUsd) {
-    return
+  assert(addIssueToProjectMutation.addProjectV2ItemById, `addProjectV2ItemById is required`)
+  assert(addIssueToProjectMutation.addProjectV2ItemById.item, `addProjectV2ItemById.item is required`)
+  const projectItemId = addIssueToProjectMutation.addProjectV2ItemById.item.id
+
+  if (inputs.projectFieldIdCalls) {
+    await updateCallsFieldValue(
+      projectItemId,
+      inputs.projectId,
+      inputs.projectFieldIdCalls,
+      addIssueToProjectMutation,
+      octokit,
+    )
   }
 
-  const costUsdFieldValue = findFieldNumberValueById(addIssueToProjectMutation, inputs.projectFieldIdCostUsd)
-  core.info(`The cost-usd field is ${costUsdFieldValue === undefined ? 'not set' : `${costUsdFieldValue} USD`}`)
-  const cumulativeCostUsd = (costUsdFieldValue ?? 0) + execution.totalCostUsd
-  core.info(`The cumulative cost is ${cumulativeCostUsd} USD`)
+  if (inputs.projectFieldIdCostUsd) {
+    await updateCostUsdFieldValue(
+      projectItemId,
+      inputs.projectId,
+      inputs.projectFieldIdCostUsd,
+      execution.costUsd,
+      addIssueToProjectMutation,
+      octokit,
+    )
+  }
+}
 
+const updateCallsFieldValue = async (
+  itemId: string,
+  projectId: string,
+  fieldId: string,
+  mutation: AddIssueToProjectMutation,
+  octokit: Octokit,
+): Promise<void> => {
+  const callsFieldValue = findFieldNumberValueById(mutation, fieldId)
+  core.info(`The calls field is ${callsFieldValue === undefined ? 'not set' : callsFieldValue}`)
+  const cumulativeCalls = (callsFieldValue ?? 0) + 1
+  core.info(`The cumulative calls is ${cumulativeCalls}`)
   await updateProjectFieldNumberValue(octokit, {
-    itemId: addIssueToProjectMutation.addProjectV2ItemById?.item?.id ?? '',
-    projectId: inputs.projectId,
-    fieldId: inputs.projectFieldIdCostUsd,
-    // https://github.com/cli/cli/issues/10342
+    itemId,
+    projectId,
+    fieldId,
+    number: cumulativeCalls,
+  })
+  core.info(`Updated the calls field to ${cumulativeCalls}`)
+}
+
+const updateCostUsdFieldValue = async (
+  itemId: string,
+  projectId: string,
+  fieldId: string,
+  costUsd: number,
+  mutation: AddIssueToProjectMutation,
+  octokit: Octokit,
+): Promise<void> => {
+  const costUsdFieldValue = findFieldNumberValueById(mutation, fieldId)
+  core.info(`The cost-usd field is ${costUsdFieldValue === undefined ? 'not set' : `${costUsdFieldValue} USD`}`)
+  const cumulativeCostUsd = (costUsdFieldValue ?? 0) + costUsd
+  core.info(`The cumulative cost is ${cumulativeCostUsd} USD`)
+  await updateProjectFieldNumberValue(octokit, {
+    itemId,
+    projectId,
+    fieldId,
     number: Math.trunc(cumulativeCostUsd * 1e8) / 1e8,
   })
-  core.info(`Updated the project field ${inputs.projectFieldIdCostUsd}`)
+  core.info(`Updated the cost-usd field to ${cumulativeCostUsd} USD`)
 }
 
 const findFieldNumberValueById = (mutation: AddIssueToProjectMutation, fieldId: string) => {
