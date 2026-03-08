@@ -8,7 +8,7 @@ const ExecutionSchema = z.array(
 )
 
 export type Execution = {
-  totalCostUsd: number
+  costUsd: number
 }
 
 export const parseExecutionFile = async (executionFilePath: string): Promise<Execution> => {
@@ -19,6 +19,6 @@ export const parseExecutionFile = async (executionFilePath: string): Promise<Exe
     throw new Error(`Invalid execution file`)
   }
   return {
-    totalCostUsd: lastStep.total_cost_usd,
+    costUsd: lastStep.total_cost_usd,
   }
 }

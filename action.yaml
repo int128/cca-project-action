@@ -7,8 +7,11 @@ inputs:
   project-id:
     description: GitHub project ID
     required: false
+  project-field-id-calls:
+    description: GitHub project field ID for number of claude-code-action calls
+    required: false
   project-field-id-cost-usd:
-    description: GitHub project field ID for cost USD
+    description: GitHub project field ID for cost in USD
     required: false
   token:
     description: GitHub token

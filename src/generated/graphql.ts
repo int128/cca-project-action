@@ -28,7 +28,7 @@ export type UpdateProjectFieldNumberValueMutationVariables = Types.Exact<{
   projectId: Types.Scalars['ID']['input'];
   itemId: Types.Scalars['ID']['input'];
   fieldId: Types.Scalars['ID']['input'];
-  number?: Types.InputMaybe<Types.Scalars['Float']['input']>;
+  number: Types.Scalars['Float']['input'];
 }>;
 
 

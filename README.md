@@ -18,17 +18,20 @@ jobs:
       - uses: int128/cca-project-action@v1
         with:
           execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
-          project-id: ...
+          project-id: PVT_...
+          project-field-id-calls: PVTF_...
+          project-field-id-cost-usd: PVTF_...
 ```
 
 ### Inputs
 
-| Name                        | Default    | Description                                             |
-| --------------------------- | ---------- | ------------------------------------------------------- |
-| `execution-file`            | (required) | The path to the execution file from claude-code-action. |
-| `project-id`                | -          | The GitHub project ID.                                  |
-| `project-field-id-cost-usd` | -          | The GitHub project field ID for cost in USD.            |
-| `token`                     | (required) | GitHub token.                                           |
+| Name                        | Default    | Description                                                        |
+| --------------------------- | ---------- | ------------------------------------------------------------------ |
+| `execution-file`            | (required) | The path to the execution file from claude-code-action             |
+| `project-id`                | -          | The GitHub project ID                                              |
+| `project-field-id-calls`    | -          | The GitHub project field ID for number of claude-code-action calls |
+| `project-field-id-cost-usd` | -          | The GitHub project field ID for cost in USD                        |
+| `token`                     | (required) | GitHub token                                                       |
 
 ### Outputs
 
