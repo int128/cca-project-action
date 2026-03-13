@@ -23,6 +23,18 @@ jobs:
           project-field-id-cost-usd: PVTF_...
 ```
 
+You can find the project ID using the following command:
+
+```bash
+gh project view --format json --jq .id --owner OWNER PROJECT_NUMBER
+```
+
+You can find the field IDs using the following command:
+
+```bash
+gh project field-list --owner OWNER --format json PROJECT_NUMBER
+```
+
 ### Inputs
 
 | Name                        | Default    | Description                                                        |
