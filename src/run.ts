@@ -6,12 +6,14 @@ import type { AddIssueToProjectMutation } from './generated/graphql.js'
 import type { Context } from './github.js'
 import { getCurrentIssue } from './issue.js'
 import { addIssueToProject } from './queries/addIssueToProject.js'
+import { updateProjectFieldDateValue } from './queries/updateProjectFieldDateValue.js'
 import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumberValue.js'
 
 type Inputs = {
   executionFile: string
   projectId: string | undefined
   projectFieldIdCalls: string | undefined
+  projectFieldIdLastCalledAt: string | undefined
   projectFieldIdCostUsd: string | undefined
 }
 
@@ -38,6 +40,16 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   assert(addIssueToProjectMutation.addProjectV2ItemById, `addProjectV2ItemById is required`)
   assert(addIssueToProjectMutation.addProjectV2ItemById.item, `addProjectV2ItemById.item is required`)
   const projectItemId = addIssueToProjectMutation.addProjectV2ItemById.item.id
+
+  if (inputs.projectFieldIdLastCalledAt) {
+    await updateProjectFieldDateValue(octokit, {
+      itemId: projectItemId,
+      projectId: inputs.projectId,
+      fieldId: inputs.projectFieldIdLastCalledAt,
+      date: new Date(),
+    })
+    core.info(`Updated the last-called-at field to today`)
+  }
 
   if (inputs.projectFieldIdCalls) {
     await updateCallsFieldValue(

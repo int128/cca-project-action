@@ -20,6 +20,7 @@ jobs:
           execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
           project-id: PVT_...
           project-field-id-calls: PVTF_...
+          project-field-id-last-called-at: PVTF_...
           project-field-id-cost-usd: PVTF_...
 ```
 
@@ -35,15 +36,23 @@ You can find the field IDs using the following command:
 gh project field-list --owner OWNER --format json PROJECT_NUMBER
 ```
 
+## Specification
+
 ### Inputs
 
-| Name                        | Default    | Description                                                        |
-| --------------------------- | ---------- | ------------------------------------------------------------------ |
-| `execution-file`            | (required) | The path to the execution file from claude-code-action             |
-| `project-id`                | -          | The GitHub project ID                                              |
-| `project-field-id-calls`    | -          | The GitHub project field ID for number of claude-code-action calls |
-| `project-field-id-cost-usd` | -          | The GitHub project field ID for cost in USD                        |
-| `token`                     | (required) | GitHub token                                                       |
+| Name             | Default    | Description                                            |
+| ---------------- | ---------- | ------------------------------------------------------ |
+| `execution-file` | (required) | The path to the execution file from claude-code-action |
+| `project-id`     | -          | The GitHub project ID                                  |
+| `token`          | (required) | GitHub token                                           |
+
+You can set the GitHub project fields as follows:
+
+| Name                              | Field type | Description                |
+| --------------------------------- | ---------- | -------------------------- |
+| `project-field-id-last-called-at` | Date       | The last called date       |
+| `project-field-id-calls`          | Number     | The number of calls        |
+| `project-field-id-cost-usd`       | Number     | The cumulative cost in USD |
 
 ### Outputs
 

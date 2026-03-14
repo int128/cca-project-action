@@ -24,6 +24,16 @@ export type AddIssueToProjectMutation = { __typename?: 'Mutation', addProjectV2I
           | { __typename: 'ProjectV2ItemFieldUserValue' }
          | null> | null } } | null } | null };
 
+export type UpdateProjectFieldDateValueMutationVariables = Types.Exact<{
+  projectId: Types.Scalars['ID']['input'];
+  itemId: Types.Scalars['ID']['input'];
+  fieldId: Types.Scalars['ID']['input'];
+  date: Types.Scalars['Date']['input'];
+}>;
+
+
+export type UpdateProjectFieldDateValueMutation = { __typename?: 'Mutation', updateProjectV2ItemFieldValue?: { __typename?: 'UpdateProjectV2ItemFieldValuePayload', projectV2Item?: { __typename?: 'ProjectV2Item', id: string } | null } | null };
+
 export type UpdateProjectFieldNumberValueMutationVariables = Types.Exact<{
   projectId: Types.Scalars['ID']['input'];
   itemId: Types.Scalars['ID']['input'];
