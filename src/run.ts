@@ -6,8 +6,8 @@ import type { AddIssueToProjectMutation } from './generated/graphql.js'
 import type { Context } from './github.js'
 import { getCurrentIssue } from './issue.js'
 import { addIssueToProject } from './queries/addIssueToProject.js'
-import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumberValue.js'
 import { updateProjectFieldDateValue } from './queries/updateProjectFieldDateValue.js'
+import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumberValue.js'
 
 type Inputs = {
   executionFile: string
