@@ -7,6 +7,9 @@ inputs:
   project-id:
     description: GitHub project ID
     required: false
+  project-field-id-last-called-at:
+    description: GitHub project field ID for the last called date
+    required: false
   project-field-id-calls:
     description: GitHub project field ID for number of claude-code-action calls
     required: false
