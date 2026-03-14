@@ -29,7 +29,7 @@ const mutation = /* GraphQL */ `
   }
 `
 
-export const addIssueToProject = async (
+export const addIssueToProjectMutation = async (
   octokit: Octokit,
   v: AddIssueToProjectMutationVariables,
 ): Promise<AddIssueToProjectMutation> => await octokit.graphql(mutation, v)
