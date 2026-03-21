@@ -1,3 +1,4 @@
+import * as core from '@actions/core'
 import type { Octokit } from '@octokit/action'
 import type { AddIssueToProjectMutation, AddIssueToProjectMutationVariables } from '../generated/graphql.js'
 
@@ -29,7 +30,9 @@ const mutation = /* GraphQL */ `
   }
 `
 
-export const addIssueToProjectMutation = async (
-  octokit: Octokit,
-  v: AddIssueToProjectMutationVariables,
-): Promise<AddIssueToProjectMutation> => await octokit.graphql(mutation, v)
+export const addIssueToProjectMutation = async (octokit: Octokit, v: AddIssueToProjectMutationVariables) =>
+  await core.group(`addIssueToProject(${JSON.stringify(v)})`, async () => {
+    const response: AddIssueToProjectMutation = await octokit.graphql(mutation, v)
+    core.info(JSON.stringify(response, null, 2))
+    return response
+  })
