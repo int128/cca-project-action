@@ -25,6 +25,17 @@ const mutation = /* GraphQL */ `
             }
           }
         }
+        project {
+          statusField: field(name: "Status") {
+            __typename
+            ... on ProjectV2SingleSelectField {
+              id
+              options {
+                id
+              }
+            }
+          }
+        }
       }
     }
   }

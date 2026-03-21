@@ -14,6 +14,8 @@ export type AddIssueToProjectResponse = {
   itemId: string
   calls: number | null | undefined
   costUsd: number | null | undefined
+  statusFieldId: string
+  statusFieldOptionIds: string[]
 }
 
 export const addIssueToProject = async (octokit: Octokit, v: AddIssueToProjectRequest) => {
@@ -30,10 +32,28 @@ export const parseAddIssueToProjectMutation = (
 ): AddIssueToProjectResponse => {
   assert(mutation.addProjectV2ItemById, `addProjectV2ItemById is required`)
   assert(mutation.addProjectV2ItemById.item, `addProjectV2ItemById.item is required`)
+  assert(mutation.addProjectV2ItemById.item.project, `addProjectV2ItemById.item.project is required`)
+
+  // Status field should exist since created by GitHub.
+  assert(
+    mutation.addProjectV2ItemById.item.project.statusField,
+    `addProjectV2ItemById.item.project.statusField is required`,
+  )
+  assert(
+    mutation.addProjectV2ItemById.item.project.statusField.__typename === 'ProjectV2SingleSelectField',
+    `addProjectV2ItemById.item.project.statusField.__typename must be ProjectV2SingleSelectField`,
+  )
+  assert(
+    mutation.addProjectV2ItemById.item.project.statusField.id,
+    `addProjectV2ItemById.item.project.statusField.id is required`,
+  )
+
   return {
     itemId: mutation.addProjectV2ItemById.item.id,
     calls: v.projectFieldIdCalls ? findFieldNumberValueById(mutation, v.projectFieldIdCalls) : undefined,
     costUsd: v.projectFieldIdCostUsd ? findFieldNumberValueById(mutation, v.projectFieldIdCostUsd) : undefined,
+    statusFieldId: mutation.addProjectV2ItemById.item.project.statusField.id,
+    statusFieldOptionIds: mutation.addProjectV2ItemById.item.project.statusField.options.map((option) => option.id),
   }
 }
 
