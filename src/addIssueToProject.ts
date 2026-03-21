@@ -6,8 +6,8 @@ import { addIssueToProjectMutation } from './queries/addIssueToProject.js'
 type AddIssueToProject = {
   projectId: string
   issueId: string
-  projectFieldIdCalls?: string
-  projectFieldIdCostUsd?: string
+  projectFieldIdCalls: string | undefined
+  projectFieldIdCostUsd: string | undefined
 }
 
 export const addIssueToProject = async (octokit: Octokit, v: AddIssueToProject) => {

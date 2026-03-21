@@ -32,6 +32,8 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   const addIssueToProjectMutation = await addIssueToProject(octokit, {
     issueId: issue.id,
     projectId: inputs.projectId,
+    projectFieldIdCalls: inputs.projectFieldIdCalls,
+    projectFieldIdCostUsd: inputs.projectFieldIdCostUsd,
   })
   core.info(`Added #${issue.number} to the project ${inputs.projectId}`)
 
