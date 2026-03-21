@@ -27,16 +27,37 @@ jobs:
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .node-version
-          package-manager-cache: false
       - run: npm install -g pnpm@latest-10
       - run: pnpm i
       - run: pnpm run test
-      - run: pnpm run build
 
+  e2e-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version-file: .node-version
+      - run: npm install -g pnpm@latest-10
+      - run: pnpm i
+      - run: pnpm run build
+      - uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        id: token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ secrets.APP_OWNER }}
       - name: Run int128/cca-project-action
         uses: ./
         with:
+          token: ${{ steps.token.outputs.token }}
           execution-file: tests/fixtures/execution_file.json
+          # An organization project for E2E testing
+          project-id: PVT_kwDOAVRuvs4BSXon
+          project-field-id-calls: PVTF_lADOAVRuvs4BSXonzg_7LJQ
+          project-field-id-last-called-at: PVTF_lADOAVRuvs4BSXonzg_7LJ8
+          project-field-id-cost-usd: PVTF_lADOAVRuvs4BSXonzg_7LKA
 
   generate:
     runs-on: ubuntu-latest
