@@ -3,14 +3,20 @@ import type { Octokit } from '@octokit/action'
 import type { AddIssueToProjectMutation } from './generated/graphql.js'
 import { addIssueToProjectMutation } from './queries/addIssueToProject.js'
 
-type AddIssueToProject = {
+export type AddIssueToProjectRequest = {
   projectId: string
   issueId: string
   projectFieldIdCalls: string | undefined
   projectFieldIdCostUsd: string | undefined
 }
 
-export const addIssueToProject = async (octokit: Octokit, v: AddIssueToProject) => {
+export type AddIssueToProjectResponse = {
+  itemId: string
+  calls: number | null | undefined
+  costUsd: number | null | undefined
+}
+
+export const addIssueToProject = async (octokit: Octokit, v: AddIssueToProjectRequest) => {
   const mutation = await addIssueToProjectMutation(octokit, {
     issueId: v.issueId,
     projectId: v.projectId,
@@ -18,7 +24,10 @@ export const addIssueToProject = async (octokit: Octokit, v: AddIssueToProject) 
   return parseAddIssueToProjectMutation(mutation, v)
 }
 
-export const parseAddIssueToProjectMutation = (mutation: AddIssueToProjectMutation, v: AddIssueToProject) => {
+export const parseAddIssueToProjectMutation = (
+  mutation: AddIssueToProjectMutation,
+  v: AddIssueToProjectRequest,
+): AddIssueToProjectResponse => {
   assert(mutation.addProjectV2ItemById, `addProjectV2ItemById is required`)
   assert(mutation.addProjectV2ItemById.item, `addProjectV2ItemById.item is required`)
   return {

@@ -15,9 +15,15 @@ type Inputs = {
   projectFieldIdCostUsd: string | undefined
 }
 
-export const run = async (inputs: Inputs, octokit: Octokit, context: Context): Promise<void> => {
+type Outputs = {
+  cumulativeCalls: number | undefined
+  cumulativeCostUsd: number | undefined
+}
+
+export const run = async (inputs: Inputs, octokit: Octokit, context: Context): Promise<Outputs | undefined> => {
   const issue = await getCurrentIssue(octokit, context)
   if (issue === undefined) {
+    core.warning(`No issue or pull request found for the current context.`)
     return
   }
 
@@ -26,10 +32,11 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   core.info(`The cost of current workflow run is ${execution.costUsd} USD`)
 
   if (!inputs.projectId) {
+    core.warning(`The project-id is not provided.`)
     return
   }
 
-  const addIssueToProjectMutation = await addIssueToProject(octokit, {
+  const addIssueToProjectResponse = await addIssueToProject(octokit, {
     issueId: issue.id,
     projectId: inputs.projectId,
     projectFieldIdCalls: inputs.projectFieldIdCalls,
@@ -39,7 +46,7 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
 
   if (inputs.projectFieldIdLastCalledAt) {
     await updateProjectFieldDateValue(octokit, {
-      itemId: addIssueToProjectMutation.itemId,
+      itemId: addIssueToProjectResponse.itemId,
       projectId: inputs.projectId,
       fieldId: inputs.projectFieldIdLastCalledAt,
       date: new Date(),
@@ -47,11 +54,12 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
     core.info(`Updated the last-called-at field to today`)
   }
 
+  let cumulativeCalls: number | undefined
   if (inputs.projectFieldIdCalls) {
-    core.info(`The calls field is ${addIssueToProjectMutation.calls ?? 'not set'}`)
-    const cumulativeCalls = (addIssueToProjectMutation.calls ?? 0) + 1
+    core.info(`The calls field is ${addIssueToProjectResponse.calls ?? 'not set'}`)
+    cumulativeCalls = (addIssueToProjectResponse.calls ?? 0) + 1
     await updateProjectFieldNumberValue(octokit, {
-      itemId: addIssueToProjectMutation.itemId,
+      itemId: addIssueToProjectResponse.itemId,
       projectId: inputs.projectId,
       fieldId: inputs.projectFieldIdCalls,
       number: cumulativeCalls,
@@ -59,15 +67,21 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
     core.info(`Updated the calls field to ${cumulativeCalls}`)
   }
 
+  let cumulativeCostUsd: number | undefined
   if (inputs.projectFieldIdCostUsd) {
-    core.info(`The cost-usd field is ${addIssueToProjectMutation.costUsd ?? 'not set'}`)
-    const cumulativeCostUsd = (addIssueToProjectMutation.costUsd ?? 0) + execution.costUsd
+    core.info(`The cost-usd field is ${addIssueToProjectResponse.costUsd ?? 'not set'}`)
+    cumulativeCostUsd = (addIssueToProjectResponse.costUsd ?? 0) + execution.costUsd
     await updateProjectFieldNumberValue(octokit, {
-      itemId: addIssueToProjectMutation.itemId,
+      itemId: addIssueToProjectResponse.itemId,
       projectId: inputs.projectId,
       fieldId: inputs.projectFieldIdCostUsd,
       number: cumulativeCostUsd,
     })
     core.info(`Updated the cost-usd field to ${cumulativeCostUsd} USD`)
+  }
+
+  return {
+    cumulativeCalls,
+    cumulativeCostUsd,
   }
 }
