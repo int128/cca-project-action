@@ -99,6 +99,7 @@ You can set the GitHub project fields as follows:
 
 ### Outputs
 
-| Name      | Description    |
-| --------- | -------------- |
-| `example` | example output |
+| Name                  | Description                                          |
+| --------------------- | ---------------------------------------------------- |
+| `cumulative-calls`    | The cumulative number of calls to claude-code-action |
+| `cumulative-cost-usd` | The cumulative cost in USD of claude-code-action     |

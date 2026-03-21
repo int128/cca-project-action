@@ -20,6 +20,11 @@ inputs:
     description: GitHub token
     required: true
     default: ${{ github.token }}
+outputs:
+  cumulative-calls:
+    description: Cumulative number of calls to claude-code-action
+  cumulative-cost-usd:
+    description: Cumulative cost in USD of claude-code-action
 runs:
   using: 'node20'
   main: 'dist/index.js'
