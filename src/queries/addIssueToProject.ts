@@ -31,7 +31,7 @@ const mutation = /* GraphQL */ `
 `
 
 export const addIssueToProjectMutation = async (octokit: Octokit, v: AddIssueToProjectMutationVariables) =>
-  await core.group(`addIssueToProject(${JSON.stringify(v)})`, async () => {
+  await core.group(`mutation addIssueToProject(${JSON.stringify(v)})`, async () => {
     const response: AddIssueToProjectMutation = await octokit.graphql(mutation, v)
     core.info(JSON.stringify(response, null, 2))
     return response
