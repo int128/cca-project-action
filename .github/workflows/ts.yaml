@@ -49,6 +49,7 @@ jobs:
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ secrets.APP_OWNER }}
       - name: Run int128/cca-project-action
         uses: ./
         with:
