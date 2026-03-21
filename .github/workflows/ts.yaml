@@ -54,7 +54,7 @@ jobs:
         with:
           token: ${{ steps.token.outputs.token }}
           execution-file: tests/fixtures/execution_file.json
-          project-id: PVT_kwHOAATm8s4BQ75l
+          project-id: PVT_kwDOAVRuvs4BSXon
 
   generate:
     runs-on: ubuntu-latest
