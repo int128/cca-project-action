@@ -27,7 +27,6 @@ jobs:
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .node-version
-          package-manager-cache: false
       - run: npm install -g pnpm@latest-10
       - run: pnpm i
       - run: pnpm run test
@@ -40,7 +39,6 @@ jobs:
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .node-version
-          package-manager-cache: false
       - run: npm install -g pnpm@latest-10
       - run: pnpm i
       - run: pnpm run build
