@@ -2,6 +2,8 @@
 
 This is an action to track the usage of claude-code-action in a GitHub project.
 
+<img width="302" height="241" alt="image" src="https://github.com/user-attachments/assets/11eab17f-b279-4c6e-bb6b-507702c76813" />
+
 ## Getting Started
 
 Add this action to your claude-code-action workflow as follows:
