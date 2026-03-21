@@ -6,8 +6,8 @@ import { addIssueToProjectMutation } from './queries/addIssueToProject.js'
 export type AddIssueToProjectRequest = {
   projectId: string
   issueId: string
-  projectFieldIdCalls?: string
-  projectFieldIdCostUsd?: string
+  projectFieldIdCalls: string | undefined
+  projectFieldIdCostUsd: string | undefined
 }
 
 export type AddIssueToProjectResponse = {
