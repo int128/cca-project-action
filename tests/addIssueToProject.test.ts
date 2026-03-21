@@ -43,6 +43,20 @@ describe('parseAddIssueToProjectMutation', () => {
                   },
                 ],
               },
+              project: {
+                statusField: {
+                  __typename: 'ProjectV2SingleSelectField',
+                  id: 'PVTSSF_lADOAVRuvs4BSXonzg_7KdA',
+                  options: [
+                    {
+                      id: 'f75ad846',
+                    },
+                    {
+                      id: '98236657',
+                    },
+                  ],
+                },
+              },
             },
           },
         },
@@ -57,6 +71,8 @@ describe('parseAddIssueToProjectMutation', () => {
       itemId: 'PVTI_lADOAVRuvs4BSXonzgn-rZs',
       calls: 1,
       costUsd: 0.1664915,
+      statusFieldId: 'PVTSSF_lADOAVRuvs4BSXonzg_7KdA',
+      statusFieldOptionIds: ['f75ad846', '98236657'],
     })
   })
 })
