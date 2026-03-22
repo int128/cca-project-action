@@ -81,6 +81,29 @@ jobs:
           project-field-id-cost-usd: PVTF_...
 ```
 
+## Advanced
+
+### Transitioning the status field
+
+You can track the failure of `@claude` calls using the status field of the project.
+For example, you can set the field options to "Success" and "Failure", and track the final status of the `@claude` call.
+
+```yaml
+jobs:
+  claude-code-action:
+    runs-on: ubuntu-latest
+    steps:
+      - id: claude-code-action
+        uses: anthropics/claude-code-action@v1
+      - if: always()
+        uses: int128/cca-project-action@v1
+        with:
+          token: ${{ steps.token.outputs.token }}
+          execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
+          # Transition the status field to "Success" or "Failure"
+          project-status-field-value-id: ${{ case(steps.claude-code-action.outcome == 'success', 'f75ad846', '2660a4d9') }}
+```
+
 ## Specification
 
 ### Inputs
