@@ -15,7 +15,7 @@ type Inputs = {
   projectFieldIdCalls: string | undefined
   projectFieldIdLastCalledAt: string | undefined
   projectFieldIdCostUsd: string | undefined
-  projectStatusFieldValueId: string | undefined
+  projectStatusFieldOptionId: string | undefined
 }
 
 type Outputs = {
@@ -38,18 +38,18 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   })
   core.info(`Added #${issue.number} to the project ${inputs.projectId}`)
 
-  if (inputs.projectStatusFieldValueId) {
+  if (inputs.projectStatusFieldOptionId) {
     assert(
-      addIssueToProjectResponse.statusFieldOptionIds.includes(inputs.projectStatusFieldValueId),
-      `project-status-field-value-id must be one of ${addIssueToProjectResponse.statusFieldOptionIds.join(', ')}`,
+      addIssueToProjectResponse.statusFieldOptionIds.includes(inputs.projectStatusFieldOptionId),
+      `project-status-field-option-id must be one of ${addIssueToProjectResponse.statusFieldOptionIds.join(', ')}`,
     )
     await updateProjectFieldSingleSelectValue(octokit, {
       itemId: addIssueToProjectResponse.itemId,
       projectId: inputs.projectId,
       fieldId: addIssueToProjectResponse.statusFieldId,
-      singleSelectOptionId: inputs.projectStatusFieldValueId,
+      singleSelectOptionId: inputs.projectStatusFieldOptionId,
     })
-    core.info(`Updated the status field to ${inputs.projectStatusFieldValueId}`)
+    core.info(`Updated the status field to ${inputs.projectStatusFieldOptionId}`)
   }
 
   if (inputs.projectFieldIdLastCalledAt) {

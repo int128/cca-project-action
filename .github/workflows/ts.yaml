@@ -63,7 +63,7 @@ jobs:
           project-field-id-last-called-at: PVTF_lADOAVRuvs4BSXonzg_7LJ8
           project-field-id-cost-usd: PVTF_lADOAVRuvs4BSXonzg_7LKA
           # Transition the status field to "Success" or "Failure"
-          project-status-field-value-id: ${{ case(steps.claude-code-action.outcome == 'success', 'f75ad846', '2660a4d9') }}
+          project-status-field-option-id: ${{ case(steps.claude-code-action.outcome == 'success', 'f75ad846', '2660a4d9') }}
 
   generate:
     runs-on: ubuntu-latest

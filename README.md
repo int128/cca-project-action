@@ -116,7 +116,7 @@ jobs:
           token: ${{ steps.token.outputs.token }}
           execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
           # Transition the status field to "Success" or "Failure"
-          project-status-field-value-id: ${{ case(steps.claude-code-action.outcome == 'success', 'SUCCESS_OPTION_ID', 'FAILURE_OPTION_ID') }}
+          project-status-field-option-id: ${{ case(steps.claude-code-action.outcome == 'success', 'SUCCESS_OPTION_ID', 'FAILURE_OPTION_ID') }}
 ```
 
 ## Specification
@@ -130,7 +130,7 @@ jobs:
 | `project-field-id-last-called-at` | The field ID for the last called date                  |
 | `project-field-id-calls`          | The field ID for the cumulative calls                  |
 | `project-field-id-cost-usd`       | The field ID for the cumulative cost in USD            |
-| `project-status-field-value-id`   | The field value ID to transition the status field      |
+| `project-status-field-option-id`  | The field option ID to transition the status field     |
 | `token`                           | GitHub token (required)                                |
 
 If `project-field-id-last-called-at` is provided, the action updates the field to the current date.
@@ -139,7 +139,7 @@ If `project-field-id-calls` is provided, the action increments the field by 1.
 
 If both `project-field-id-cost-usd` and `execution-file` are provided, the action increments the field by the cost from the execution file.
 
-If `project-status-field-value-id` is provided, the action transitions the status field to the specified value ID.
+If `project-status-field-option-id` is provided, the action transitions the status field to the specified option ID.
 
 ### Outputs
 
