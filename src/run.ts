@@ -9,7 +9,7 @@ import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumbe
 
 type Inputs = {
   executionFile: string
-  projectId: string | undefined
+  projectId: string
   projectFieldIdCalls: string | undefined
   projectFieldIdLastCalledAt: string | undefined
   projectFieldIdCostUsd: string | undefined
@@ -30,11 +30,6 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   core.info(`Parsing the execution file: ${inputs.executionFile}`)
   const execution = await parseExecutionFile(inputs.executionFile)
   core.info(`The cost of current workflow run is ${execution.costUsd} USD`)
-
-  if (!inputs.projectId) {
-    core.warning(`The project-id is not provided.`)
-    return
-  }
 
   const addIssueToProjectResponse = await addIssueToProject(octokit, {
     issueId: issue.id,

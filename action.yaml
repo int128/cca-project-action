@@ -6,7 +6,7 @@ inputs:
     required: true
   project-id:
     description: GitHub project ID
-    required: false
+    required: true
   project-field-id-last-called-at:
     description: GitHub project field ID for the last called date
     required: false

@@ -6,7 +6,7 @@ try {
   const outputs = await run(
     {
       executionFile: core.getInput('execution-file', { required: true }),
-      projectId: core.getInput('project-id') || undefined,
+      projectId: core.getInput('project-id', { required: true }),
       projectFieldIdLastCalledAt: core.getInput('project-field-id-last-called-at') || undefined,
       projectFieldIdCalls: core.getInput('project-field-id-calls') || undefined,
       projectFieldIdCostUsd: core.getInput('project-field-id-cost-usd') || undefined,
