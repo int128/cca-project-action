@@ -86,7 +86,7 @@ The following permissions are required:
 | Name             | Default    | Description                                            |
 | ---------------- | ---------- | ------------------------------------------------------ |
 | `execution-file` | (required) | The path to the execution file from claude-code-action |
-| `project-id`     | -          | The GitHub project ID                                  |
+| `project-id`     | (required) | The GitHub project ID                                  |
 | `token`          | (required) | GitHub token                                           |
 
 You can set the GitHub project fields as follows:
