@@ -3,6 +3,10 @@
 This is an action to track the usage of claude-code-action in a GitHub project.
 It is useful to improve the user experience and optimize the cost for AI interactions.
 
+Here is an example project:
+
+<img width="942" height="397" alt="image" src="https://github.com/user-attachments/assets/c6ed31b6-2949-404e-b448-01b96cfc65e5" />
+
 <img width="302" height="241" alt="image" src="https://github.com/user-attachments/assets/11eab17f-b279-4c6e-bb6b-507702c76813" />
 
 ## Getting Started
