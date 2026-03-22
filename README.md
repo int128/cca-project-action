@@ -43,6 +43,21 @@ You can find the field IDs using the following command:
 {
   "fields": [
     {
+      "id": "PVTSSF_lADOAVRuvs4BSXonzg_7KdA",
+      "name": "Status",
+      "options": [
+        {
+          "id": "f75ad846",
+          "name": "Success"
+        },
+        {
+          "id": "2660a4d9",
+          "name": "Failure"
+        }
+      ],
+      "type": "ProjectV2SingleSelectField"
+    },
+    {
       "id": "PVTF_lADOAVRuvs4BSXonzg_7LJ8",
       "name": "Last called at",
       "type": "ProjectV2Field"
@@ -101,7 +116,7 @@ jobs:
           token: ${{ steps.token.outputs.token }}
           execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
           # Transition the status field to "Success" or "Failure"
-          project-status-field-value-id: ${{ case(steps.claude-code-action.outcome == 'success', 'f75ad846', '2660a4d9') }}
+          project-status-field-value-id: ${{ case(steps.claude-code-action.outcome == 'success', 'SUCCESS_OPTION_ID', 'FAILURE_OPTION_ID') }}
 ```
 
 ## Specification
