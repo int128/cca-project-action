@@ -7,33 +7,6 @@ It is useful to improve the user experience and optimize the cost for AI interac
 
 ## Getting Started
 
-Add this action to your claude-code-action workflow as follows:
-
-```yaml
-jobs:
-  claude-code-action:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/create-github-app-token@v3
-        id: token
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
-      - id: claude-code-action
-        uses: anthropics/claude-code-action@v1
-
-      # Add to the project even if claude-code-action fails, to track the user experience and cost.
-      - if: always()
-        uses: int128/cca-project-action@v1
-        with:
-          token: ${{ steps.token.outputs.token }}
-          execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
-          project-id: PVT_...
-          project-field-id-last-called-at: PVTF_...
-          project-field-id-calls: PVTF_...
-          project-field-id-cost-usd: PVTF_...
-```
-
 ### GitHub Project
 
 Create a GitHub project and add the following fields:
@@ -54,34 +27,59 @@ Create a GitHub project and add the following fields:
   - The field type must be Number.
   - This indicates how much the user has spent on AI. If high, the user can optimize the prompts.
 
-If the field type is mismatched, the GitHub API will throw an error.
+If the field type is mismatched, this action will fail.
 
 You can find the project ID using the following command:
 
-```bash
-gh project view --format json --jq .id --owner OWNER PROJECT_NUMBER
+```console
+$ gh project view --format json --jq .id --owner OWNER PROJECT_NUMBER
+PVT_kwDOAVRuvs4BSXon
 ```
 
 You can find the field IDs using the following command:
 
-```bash
-gh project field-list --owner OWNER --format json PROJECT_NUMBER
+```console
+% gh project field-list --owner OWNER --format json PROJECT_NUMBER
+{
+  "fields": [
+    {
+      "id": "PVTF_lADOAVRuvs4BSXonzg_7LJ8",
+      "name": "Last called at",
+      "type": "ProjectV2Field"
+    },
+    // omitted...
+  ]
+}
 ```
 
-### GitHub App or Personal Access Token
+### GitHub Actions
 
-This action requires a GitHub token to update a project.
-Since `secrets.GITHUB_TOKEN` does not have permission to update a project,
-you need to create a GitHub App or a Personal Access Token.
-See [Automating Projects using Actions](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/automating-projects-using-actions) for more details.
+Add this action to your claude-code-action workflow as follows:
 
-The following permissions are required:
+```yaml
+jobs:
+  claude-code-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v3
+        id: token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - id: claude-code-action
+        uses: anthropics/claude-code-action@v1
 
-- Repository permissions
-  - Issues: Read
-  - Pull requests: Read
-- Organization permissions
-  - Projects: Read and Write
+      # Add to the project even if claude-code-action fails, to track the user experience and cost.
+      - if: always()
+        uses: int128/cca-project-action@v1
+        with:
+          token: ${{ steps.token.outputs.token }}
+          execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
+          project-id: PVT_...
+          project-field-id-last-called-at: PVTF_...
+          project-field-id-calls: PVTF_...
+          project-field-id-cost-usd: PVTF_...
+```
 
 ## Specification
 
@@ -111,3 +109,18 @@ If `project-status-field-value-id` is provided, the action transitions the statu
 | --------------------- | ------------------------------ |
 | `cumulative-calls`    | The cumulative number of calls |
 | `cumulative-cost-usd` | The cumulative cost in USD     |
+
+### GitHub token permissions
+
+This action requires a GitHub token to update a project.
+You need to create a GitHub App or a Personal Access Token,
+since `secrets.GITHUB_TOKEN` does not have permissions to update a project.
+See [Automating Projects using Actions](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/automating-projects-using-actions) for more details.
+
+The following permissions are required:
+
+- Repository permissions
+  - Issues: Read
+  - Pull requests: Read
+- Organization permissions
+  - Projects: Read and Write
