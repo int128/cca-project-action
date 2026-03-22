@@ -48,11 +48,15 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: ${{ secrets.APP_OWNER }}
+      - id: claude-code-action
+        name: Run claude-code-action (mock)
+        run: |
+          echo 'execution_file=tests/fixtures/execution_file.json' >> "$GITHUB_OUTPUT"
       - name: Run int128/cca-project-action
         uses: ./
         with:
           token: ${{ steps.token.outputs.token }}
-          execution-file: tests/fixtures/execution_file.json
+          execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
           # An organization project for E2E testing
           project-id: PVT_kwDOAVRuvs4BSXon
           project-field-id-calls: PVTF_lADOAVRuvs4BSXonzg_7LJQ
