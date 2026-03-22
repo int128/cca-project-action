@@ -61,6 +61,7 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   }
 
   if (inputs.executionFile === undefined) {
+    core.info(`No execution file provided, skipping the cost calculation.`)
     return {
       cumulativeCalls,
       cumulativeCostUsd,
