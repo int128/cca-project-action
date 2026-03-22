@@ -7,6 +7,7 @@ import { getCurrentIssue } from './issue.js'
 import { updateProjectFieldDateValue } from './queries/updateProjectFieldDateValue.js'
 import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumberValue.js'
 import { updateProjectFieldSingleSelectValue } from './queries/updateProjectFieldSingleSelectValue.js'
+import assert from 'node:assert'
 
 type Inputs = {
   executionFile: string | undefined
@@ -38,6 +39,10 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   core.info(`Added #${issue.number} to the project ${inputs.projectId}`)
 
   if (inputs.projectStatusFieldValueId) {
+    assert(
+      addIssueToProjectResponse.statusFieldOptionIds.includes(inputs.projectStatusFieldValueId),
+      `project-status-field-value-id must be one of ${addIssueToProjectResponse.statusFieldOptionIds.join(', ')}`,
+    )
     await updateProjectFieldSingleSelectValue(octokit, {
       itemId: addIssueToProjectResponse.itemId,
       projectId: inputs.projectId,
