@@ -14,16 +14,15 @@ jobs:
   claude-code-action:
     runs-on: ubuntu-latest
     steps:
-      - id: claude-code-action
-        uses: anthropics/claude-code-action@v1
-
-      # Add to the project even if claude-code-action fails, to track the user experience and cost.
-      - if: always()
-        uses: actions/create-github-app-token@v3
+      - uses: actions/create-github-app-token@v3
         id: token
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
+      - id: claude-code-action
+        uses: anthropics/claude-code-action@v1
+
+      # Add to the project even if claude-code-action fails, to track the user experience and cost.
       - if: always()
         uses: int128/cca-project-action@v1
         with:
