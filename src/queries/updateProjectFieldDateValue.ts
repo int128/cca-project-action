@@ -1,3 +1,4 @@
+import * as core from '@actions/core'
 import type { Octokit } from '@octokit/action'
 import type {
   UpdateProjectFieldDateValueMutation,
@@ -21,7 +22,9 @@ const mutation = /* GraphQL */ `
   }
 `
 
-export const updateProjectFieldDateValue = async (
-  octokit: Octokit,
-  v: UpdateProjectFieldDateValueMutationVariables,
-): Promise<UpdateProjectFieldDateValueMutation> => await octokit.graphql(mutation, v)
+export const updateProjectFieldDateValue = async (octokit: Octokit, v: UpdateProjectFieldDateValueMutationVariables) =>
+  await core.group(`mutation updateProjectFieldDateValue(${JSON.stringify(v)})`, async () => {
+    const response: UpdateProjectFieldDateValueMutation = await octokit.graphql(mutation, v)
+    core.info(JSON.stringify(response, null, 2))
+    return response
+  })

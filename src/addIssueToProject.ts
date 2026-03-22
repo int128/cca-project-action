@@ -12,8 +12,8 @@ export type AddIssueToProjectRequest = {
 
 export type AddIssueToProjectResponse = {
   itemId: string
-  calls: number | null | undefined
-  costUsd: number | null | undefined
+  calls: number | undefined
+  costUsd: number | undefined
 }
 
 export const addIssueToProject = async (octokit: Octokit, v: AddIssueToProjectRequest) => {
@@ -30,10 +30,18 @@ export const parseAddIssueToProjectMutation = (
 ): AddIssueToProjectResponse => {
   assert(mutation.addProjectV2ItemById, `addProjectV2ItemById is required`)
   assert(mutation.addProjectV2ItemById.item, `addProjectV2ItemById.item is required`)
+  let calls: number | undefined
+  if (v.projectFieldIdCalls) {
+    calls = findFieldNumberValueById(mutation, v.projectFieldIdCalls) ?? undefined
+  }
+  let costUsd: number | undefined
+  if (v.projectFieldIdCostUsd) {
+    costUsd = findFieldNumberValueById(mutation, v.projectFieldIdCostUsd) ?? undefined
+  }
   return {
     itemId: mutation.addProjectV2ItemById.item.id,
-    calls: v.projectFieldIdCalls ? findFieldNumberValueById(mutation, v.projectFieldIdCalls) : undefined,
-    costUsd: v.projectFieldIdCostUsd ? findFieldNumberValueById(mutation, v.projectFieldIdCostUsd) : undefined,
+    calls,
+    costUsd,
   }
 }
 

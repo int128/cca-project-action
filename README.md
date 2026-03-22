@@ -1,6 +1,7 @@
 # cca-project-action [![ts](https://github.com/int128/typescript-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/typescript-action/actions/workflows/ts.yaml)
 
 This is an action to track the usage of claude-code-action in a GitHub project.
+It is useful to improve the user experience and optimize the cost for AI interactions.
 
 <img width="302" height="241" alt="image" src="https://github.com/user-attachments/assets/11eab17f-b279-4c6e-bb6b-507702c76813" />
 
@@ -20,19 +21,16 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY }}
       - id: claude-code-action
         uses: anthropics/claude-code-action@v1
+
+      # Add to the project even if claude-code-action fails, to track the user experience and cost.
+      - if: always()
+        uses: int128/cca-project-action@v1
         with:
-          # ...omitted...
-      - uses: int128/cca-project-action@v1
-        with:
-          # The execution file is required to calculate the cost of claude-code-action.
-          execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
-          # The token is required to update the GitHub project.
           token: ${{ steps.token.outputs.token }}
-          # The project ID is required to update the GitHub project.
+          execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
           project-id: PVT_...
-          # The field IDs.
-          project-field-id-calls: PVTF_...
           project-field-id-last-called-at: PVTF_...
+          project-field-id-calls: PVTF_...
           project-field-id-cost-usd: PVTF_...
 ```
 
@@ -40,15 +38,21 @@ jobs:
 
 Create a GitHub project and add the following fields:
 
-- Calls
-  - The field type must be **Number**.
-  - This action will increment this field by 1.
 - Last called at
-  - The field type must be **Date**.
-  - This action will update this field to the current date.
+  - This field represents the last called date of `@claude`.
+    It will be updated to the current date even if the run fails.
+  - The field type must be Date.
+  - You can sort the project by this field to see the most recent calls.
+- Calls
+  - This field represents the cumulative number of calls to `@claude`.
+    It will be incremented for each workflow run even if the run fails.
+  - The field type must be Number.
+  - This indicates how many times the user interacted with AI. If high, the user can be exhausted.
 - Cost USD
-  - The field type must be **Number**.
-  - This action will increment this field by the cost of claude-code-action in USD.
+  - This field represents the cumulative cost in USD for claude-code-action.
+    It will be incremented by the cost calculated from the execution file.
+  - The field type must be Number.
+  - This indicates how much the user has spent on AI. If high, the user can optimize the prompts.
 
 If the field type is mismatched, the GitHub API will throw an error.
 
@@ -83,23 +87,24 @@ The following permissions are required:
 
 ### Inputs
 
-| Name             | Default    | Description                                            |
-| ---------------- | ---------- | ------------------------------------------------------ |
-| `execution-file` | (required) | The path to the execution file from claude-code-action |
-| `project-id`     | (required) | The GitHub project ID                                  |
-| `token`          | (required) | GitHub token                                           |
+| Name                              | Description                                            |
+| --------------------------------- | ------------------------------------------------------ |
+| `project-id`                      | The project ID (required)                              |
+| `project-field-id-last-called-at` | The field ID for the last called date                  |
+| `project-field-id-calls`          | The field ID for the cumulative calls                  |
+| `execution-file`                  | The path to the execution file from claude-code-action |
+| `project-field-id-cost-usd`       | The field ID for the cumulative cost in USD            |
+| `token`                           | GitHub token (required)                                |
 
-You can set the GitHub project fields as follows:
+If `project-field-id-last-called-at` is provided, the action updates the field to the current date.
 
-| Name                              | Field type | Description                |
-| --------------------------------- | ---------- | -------------------------- |
-| `project-field-id-last-called-at` | Date       | The last called date       |
-| `project-field-id-calls`          | Number     | The number of calls        |
-| `project-field-id-cost-usd`       | Number     | The cumulative cost in USD |
+If `project-field-id-calls` is provided, the action increments the field by 1.
+
+If both `project-field-id-cost-usd` and `execution-file` are provided, the action increments the field by the cost from the execution file.
 
 ### Outputs
 
-| Name                  | Description                                          |
-| --------------------- | ---------------------------------------------------- |
-| `cumulative-calls`    | The cumulative number of calls to claude-code-action |
-| `cumulative-cost-usd` | The cumulative cost in USD of claude-code-action     |
+| Name                  | Description                    |
+| --------------------- | ------------------------------ |
+| `cumulative-calls`    | The cumulative number of calls |
+| `cumulative-cost-usd` | The cumulative cost in USD     |

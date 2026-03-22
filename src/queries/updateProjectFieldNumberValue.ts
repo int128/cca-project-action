@@ -1,3 +1,4 @@
+import * as core from '@actions/core'
 import type { Octokit } from '@octokit/action'
 import type {
   UpdateProjectFieldNumberValueMutation,
@@ -24,11 +25,14 @@ const mutation = /* GraphQL */ `
 export const updateProjectFieldNumberValue = async (
   octokit: Octokit,
   v: UpdateProjectFieldNumberValueMutationVariables,
-): Promise<UpdateProjectFieldNumberValueMutation> => {
-  const truncated: UpdateProjectFieldNumberValueMutationVariables = {
-    ...v,
-    // https://github.com/cli/cli/issues/10342
-    number: Math.trunc(v.number * 1e8) / 1e8,
-  }
-  return await octokit.graphql(mutation, truncated)
-}
+) =>
+  await core.group(`mutation updateProjectFieldNumberValue(${JSON.stringify(v)})`, async () => {
+    const truncated: UpdateProjectFieldNumberValueMutationVariables = {
+      ...v,
+      // https://github.com/cli/cli/issues/10342
+      number: Math.trunc(v.number * 1e8) / 1e8,
+    }
+    const response: UpdateProjectFieldNumberValueMutation = await octokit.graphql(mutation, truncated)
+    core.info(JSON.stringify(response, null, 2))
+    return response
+  })
