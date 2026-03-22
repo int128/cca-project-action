@@ -27,18 +27,29 @@ Create a GitHub project and add the following fields:
   - The field type must be Number.
   - This indicates how much the user has spent on AI. If high, the user can optimize the prompts.
 
-If the field type is mismatched, the GitHub API will throw an error.
+If the field type is mismatched, this action will fail.
 
 You can find the project ID using the following command:
 
-```bash
-gh project view --format json --jq .id --owner OWNER PROJECT_NUMBER
+```console
+$ gh project view --format json --jq .id --owner OWNER PROJECT_NUMBER
+PVT_kwDOAVRuvs4BSXon
 ```
 
 You can find the field IDs using the following command:
 
-```bash
-gh project field-list --owner OWNER --format json PROJECT_NUMBER
+```console
+% gh project field-list --owner OWNER --format json PROJECT_NUMBER
+{
+  "fields": [
+    {
+      "id": "PVTF_lADOAVRuvs4BSXonzg_7LJ8",
+      "name": "Last called at",
+      "type": "ProjectV2Field"
+    },
+    // omitted...
+  ]
+}
 ```
 
 ### GitHub Actions
