@@ -10,6 +10,7 @@ try {
       projectFieldIdLastCalledAt: core.getInput('project-field-id-last-called-at') || undefined,
       projectFieldIdCalls: core.getInput('project-field-id-calls') || undefined,
       projectFieldIdCostUsd: core.getInput('project-field-id-cost-usd') || undefined,
+      projectStatusFieldOptionId: core.getInput('project-status-field-option-id') || undefined,
     },
     getOctokit(),
     await getContext(),

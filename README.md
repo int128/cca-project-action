@@ -47,6 +47,21 @@ You can find the field IDs using the following command:
 {
   "fields": [
     {
+      "id": "PVTSSF_lADOAVRuvs4BSXonzg_7KdA",
+      "name": "Status",
+      "options": [
+        {
+          "id": "f75ad846",
+          "name": "Success"
+        },
+        {
+          "id": "2660a4d9",
+          "name": "Failure"
+        }
+      ],
+      "type": "ProjectV2SingleSelectField"
+    },
+    {
       "id": "PVTF_lADOAVRuvs4BSXonzg_7LJ8",
       "name": "Last called at",
       "type": "ProjectV2Field"
@@ -85,6 +100,29 @@ jobs:
           project-field-id-cost-usd: PVTF_...
 ```
 
+## Advanced
+
+### Transitioning the status field
+
+You can track the failure of `@claude` calls using the status field of the project.
+For example, you can set the field options to "Success" and "Failure", and track the final status of the `@claude` call.
+
+```yaml
+jobs:
+  claude-code-action:
+    runs-on: ubuntu-latest
+    steps:
+      - id: claude-code-action
+        uses: anthropics/claude-code-action@v1
+      - if: always()
+        uses: int128/cca-project-action@v1
+        with:
+          token: ${{ steps.token.outputs.token }}
+          execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
+          # Transition the status field to "Success" or "Failure"
+          project-status-field-option-id: ${{ case(steps.claude-code-action.outcome == 'success', 'SUCCESS_OPTION_ID', 'FAILURE_OPTION_ID') }}
+```
+
 ## Specification
 
 ### Inputs
@@ -96,6 +134,7 @@ jobs:
 | `project-field-id-last-called-at` | The field ID for the last called date                  |
 | `project-field-id-calls`          | The field ID for the cumulative calls                  |
 | `project-field-id-cost-usd`       | The field ID for the cumulative cost in USD            |
+| `project-status-field-option-id`  | The field option ID to transition the status field     |
 | `token`                           | GitHub token (required)                                |
 
 If `project-field-id-last-called-at` is provided, the action updates the field to the current date.
@@ -103,6 +142,8 @@ If `project-field-id-last-called-at` is provided, the action updates the field t
 If `project-field-id-calls` is provided, the action increments the field by 1.
 
 If both `project-field-id-cost-usd` and `execution-file` are provided, the action increments the field by the cost from the execution file.
+
+If `project-status-field-option-id` is provided, the action transitions the status field to the specified option ID.
 
 ### Outputs
 

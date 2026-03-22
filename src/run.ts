@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import * as core from '@actions/core'
 import type { Octokit } from '@octokit/action'
 import { addIssueToProject } from './addIssueToProject.js'
@@ -6,6 +7,7 @@ import type { Context } from './github.js'
 import { getCurrentIssue } from './issue.js'
 import { updateProjectFieldDateValue } from './queries/updateProjectFieldDateValue.js'
 import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumberValue.js'
+import { updateProjectFieldSingleSelectValue } from './queries/updateProjectFieldSingleSelectValue.js'
 
 type Inputs = {
   executionFile: string | undefined
@@ -13,6 +15,7 @@ type Inputs = {
   projectFieldIdCalls: string | undefined
   projectFieldIdLastCalledAt: string | undefined
   projectFieldIdCostUsd: string | undefined
+  projectStatusFieldOptionId: string | undefined
 }
 
 type Outputs = {
@@ -35,6 +38,20 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
   })
   core.info(`Added #${issue.number} to the project ${inputs.projectId}`)
 
+  if (inputs.projectStatusFieldOptionId) {
+    assert(
+      addIssueToProjectResponse.statusFieldOptionIds.includes(inputs.projectStatusFieldOptionId),
+      `project-status-field-option-id must be one of ${addIssueToProjectResponse.statusFieldOptionIds.join(', ')}`,
+    )
+    await updateProjectFieldSingleSelectValue(octokit, {
+      itemId: addIssueToProjectResponse.itemId,
+      projectId: inputs.projectId,
+      fieldId: addIssueToProjectResponse.statusFieldId,
+      singleSelectOptionId: inputs.projectStatusFieldOptionId,
+    })
+    core.info(`Updated the status field to ${inputs.projectStatusFieldOptionId}`)
+  }
+
   if (inputs.projectFieldIdLastCalledAt) {
     await updateProjectFieldDateValue(octokit, {
       itemId: addIssueToProjectResponse.itemId,
@@ -44,6 +61,7 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
     })
     core.info(`Updated the last-called-at field to today`)
   }
+
   let cumulativeCalls = addIssueToProjectResponse.calls
   core.info(`The calls field is ${cumulativeCalls ?? 'not set'}`)
   let cumulativeCostUsd = addIssueToProjectResponse.costUsd

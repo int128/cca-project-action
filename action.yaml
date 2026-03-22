@@ -16,6 +16,9 @@ inputs:
   project-field-id-cost-usd:
     description: GitHub project field ID for the cumulative cost in USD
     required: false
+  project-status-field-option-id:
+    description: The field option ID to transition the status field
+    required: false
   token:
     description: GitHub token
     required: true

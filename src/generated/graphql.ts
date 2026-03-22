@@ -22,7 +22,11 @@ export type AddIssueToProjectMutation = { __typename?: 'Mutation', addProjectV2I
           | { __typename: 'ProjectV2ItemFieldSingleSelectValue' }
           | { __typename: 'ProjectV2ItemFieldTextValue' }
           | { __typename: 'ProjectV2ItemFieldUserValue' }
-         | null> | null } } | null } | null };
+         | null> | null }, project: { __typename?: 'ProjectV2', statusField?:
+          | { __typename: 'ProjectV2Field' }
+          | { __typename: 'ProjectV2IterationField' }
+          | { __typename: 'ProjectV2SingleSelectField', id: string, options: Array<{ __typename?: 'ProjectV2SingleSelectFieldOption', id: string }> }
+         | null } } | null } | null };
 
 export type UpdateProjectFieldDateValueMutationVariables = Types.Exact<{
   projectId: Types.Scalars['ID']['input'];
@@ -43,3 +47,13 @@ export type UpdateProjectFieldNumberValueMutationVariables = Types.Exact<{
 
 
 export type UpdateProjectFieldNumberValueMutation = { __typename?: 'Mutation', updateProjectV2ItemFieldValue?: { __typename?: 'UpdateProjectV2ItemFieldValuePayload', projectV2Item?: { __typename?: 'ProjectV2Item', id: string } | null } | null };
+
+export type UpdateProjectFieldSingleSelectValueMutationVariables = Types.Exact<{
+  projectId: Types.Scalars['ID']['input'];
+  itemId: Types.Scalars['ID']['input'];
+  fieldId: Types.Scalars['ID']['input'];
+  singleSelectOptionId: Types.Scalars['String']['input'];
+}>;
+
+
+export type UpdateProjectFieldSingleSelectValueMutation = { __typename?: 'Mutation', updateProjectV2ItemFieldValue?: { __typename?: 'UpdateProjectV2ItemFieldValuePayload', projectV2Item?: { __typename?: 'ProjectV2Item', id: string } | null } | null };
