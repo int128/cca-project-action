@@ -1,9 +1,9 @@
 name: cca-project-action
-description: Aggregate claude-code-action issues to GitHub project
+description: Track the usage of claude-code-action in a GitHub project
 inputs:
   execution-file:
     description: Path to the execution file from claude-code-action
-    required: true
+    required: false
   project-id:
     description: GitHub project ID
     required: true
@@ -11,10 +11,10 @@ inputs:
     description: GitHub project field ID for the last called date
     required: false
   project-field-id-calls:
-    description: GitHub project field ID for number of claude-code-action calls
+    description: GitHub project field ID for the cumulative calls
     required: false
   project-field-id-cost-usd:
-    description: GitHub project field ID for cost in USD
+    description: GitHub project field ID for the cumulative cost in USD
     required: false
   token:
     description: GitHub token

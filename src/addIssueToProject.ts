@@ -12,8 +12,8 @@ export type AddIssueToProjectRequest = {
 
 export type AddIssueToProjectResponse = {
   itemId: string
-  calls: number | null | undefined
-  costUsd: number | null | undefined
+  calls: number | undefined
+  costUsd: number | undefined
   statusFieldId: string
   statusFieldOptionIds: string[]
 }
@@ -48,10 +48,18 @@ export const parseAddIssueToProjectMutation = (
     `addProjectV2ItemById.item.project.statusField.id is required`,
   )
 
+  let calls: number | undefined
+  if (v.projectFieldIdCalls) {
+    calls = findFieldNumberValueById(mutation, v.projectFieldIdCalls) ?? undefined
+  }
+  let costUsd: number | undefined
+  if (v.projectFieldIdCostUsd) {
+    costUsd = findFieldNumberValueById(mutation, v.projectFieldIdCostUsd) ?? undefined
+  }
   return {
     itemId: mutation.addProjectV2ItemById.item.id,
-    calls: v.projectFieldIdCalls ? findFieldNumberValueById(mutation, v.projectFieldIdCalls) : undefined,
-    costUsd: v.projectFieldIdCostUsd ? findFieldNumberValueById(mutation, v.projectFieldIdCostUsd) : undefined,
+    calls,
+    costUsd,
     statusFieldId: mutation.addProjectV2ItemById.item.project.statusField.id,
     statusFieldOptionIds: mutation.addProjectV2ItemById.item.project.statusField.options.map((option) => option.id),
   }
