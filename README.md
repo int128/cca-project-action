@@ -110,7 +110,6 @@ If both `project-field-id-cost-usd` and `execution-file` are provided, the actio
 ### GitHub token permissions
 
 This action requires a GitHub token to update a project.
-
 You need to create a GitHub App or a Personal Access Token,
 since `secrets.GITHUB_TOKEN` does not have permissions to update a project.
 See [Automating Projects using Actions](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/automating-projects-using-actions) for more details.
