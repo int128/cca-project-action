@@ -61,6 +61,7 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
     })
     core.info(`Updated the last-called-at field to today`)
   }
+
   let cumulativeCalls = addIssueToProjectResponse.calls
   core.info(`The calls field is ${cumulativeCalls ?? 'not set'}`)
   let cumulativeCostUsd = addIssueToProjectResponse.costUsd
