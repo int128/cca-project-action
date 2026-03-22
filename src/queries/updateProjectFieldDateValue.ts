@@ -23,7 +23,7 @@ const mutation = /* GraphQL */ `
 `
 
 export const updateProjectFieldDateValue = async (octokit: Octokit, v: UpdateProjectFieldDateValueMutationVariables) =>
-  await core.group(`mutation updateProjectFieldDateValue`, async () => {
+  await core.group(`mutation updateProjectFieldDateValue(${JSON.stringify(v)})`, async () => {
     const response: UpdateProjectFieldDateValueMutation = await octokit.graphql(mutation, v)
     core.info(JSON.stringify(response, null, 2))
     return response

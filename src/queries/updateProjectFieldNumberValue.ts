@@ -26,7 +26,7 @@ export const updateProjectFieldNumberValue = async (
   octokit: Octokit,
   v: UpdateProjectFieldNumberValueMutationVariables,
 ) =>
-  await core.group(`mutation updateProjectFieldNumberValue`, async () => {
+  await core.group(`mutation updateProjectFieldNumberValue(${JSON.stringify(v)})`, async () => {
     const truncated: UpdateProjectFieldNumberValueMutationVariables = {
       ...v,
       // https://github.com/cli/cli/issues/10342
