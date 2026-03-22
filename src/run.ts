@@ -6,6 +6,7 @@ import type { Context } from './github.js'
 import { getCurrentIssue } from './issue.js'
 import { updateProjectFieldDateValue } from './queries/updateProjectFieldDateValue.js'
 import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumberValue.js'
+import { updateProjectFieldSingleSelectValue } from './queries/updateProjectFieldSingleSelectValue.js'
 
 type Inputs = {
   executionFile: string | undefined
@@ -13,6 +14,7 @@ type Inputs = {
   projectFieldIdCalls: string | undefined
   projectFieldIdLastCalledAt: string | undefined
   projectFieldIdCostUsd: string | undefined
+  projectStatusFieldValueId: string | undefined
 }
 
 type Outputs = {
@@ -34,6 +36,16 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
     projectFieldIdCostUsd: inputs.projectFieldIdCostUsd,
   })
   core.info(`Added #${issue.number} to the project ${inputs.projectId}`)
+
+  if (inputs.projectStatusFieldValueId) {
+    await updateProjectFieldSingleSelectValue(octokit, {
+      itemId: addIssueToProjectResponse.itemId,
+      projectId: inputs.projectId,
+      fieldId: addIssueToProjectResponse.statusFieldId,
+      singleSelectOptionId: inputs.projectStatusFieldValueId,
+    })
+    core.info(`Updated the status field to ${inputs.projectStatusFieldValueId}`)
+  }
 
   if (inputs.projectFieldIdLastCalledAt) {
     await updateProjectFieldDateValue(octokit, {

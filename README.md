@@ -89,11 +89,12 @@ The following permissions are required:
 
 | Name                              | Description                                            |
 | --------------------------------- | ------------------------------------------------------ |
+| `execution-file`                  | The path to the execution file from claude-code-action |
 | `project-id`                      | The project ID (required)                              |
 | `project-field-id-last-called-at` | The field ID for the last called date                  |
 | `project-field-id-calls`          | The field ID for the cumulative calls                  |
-| `execution-file`                  | The path to the execution file from claude-code-action |
 | `project-field-id-cost-usd`       | The field ID for the cumulative cost in USD            |
+| `project-status-field-value-id`   | The field value ID to transition the status field      |
 | `token`                           | GitHub token (required)                                |
 
 If `project-field-id-last-called-at` is provided, the action updates the field to the current date.
@@ -101,6 +102,8 @@ If `project-field-id-last-called-at` is provided, the action updates the field t
 If `project-field-id-calls` is provided, the action increments the field by 1.
 
 If both `project-field-id-cost-usd` and `execution-file` are provided, the action increments the field by the cost from the execution file.
+
+If `project-status-field-value-id` is provided, the action transitions the status field to the specified value ID.
 
 ### Outputs
 
