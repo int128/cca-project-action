@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import * as core from '@actions/core'
 import type { Octokit } from '@octokit/action'
 import { addIssueToProject } from './addIssueToProject.js'
@@ -7,7 +8,6 @@ import { getCurrentIssue } from './issue.js'
 import { updateProjectFieldDateValue } from './queries/updateProjectFieldDateValue.js'
 import { updateProjectFieldNumberValue } from './queries/updateProjectFieldNumberValue.js'
 import { updateProjectFieldSingleSelectValue } from './queries/updateProjectFieldSingleSelectValue.js'
-import assert from 'node:assert'
 
 type Inputs = {
   executionFile: string | undefined
