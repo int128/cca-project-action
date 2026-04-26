@@ -21,8 +21,8 @@ jobs:
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .node-version
-          package-manager-cache: false
-      - run: npm install -g pnpm@latest-10
+      - run: npm install -g corepack
+      - run: corepack enable
       - run: pnpm i
       - run: pnpm build
       - uses: int128/release-typescript-action@f1bc11909bceca31a58c9c9c4607ab1805c74312 # v1.51.0

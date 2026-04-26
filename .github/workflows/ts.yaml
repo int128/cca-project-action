@@ -27,7 +27,8 @@ jobs:
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .node-version
-      - run: npm install -g pnpm@latest-10
+      - run: npm install -g corepack
+      - run: corepack enable
       - run: pnpm i
       - run: pnpm run test
 
@@ -39,7 +40,8 @@ jobs:
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .node-version
-      - run: npm install -g pnpm@latest-10
+      - run: npm install -g corepack
+      - run: corepack enable
       - run: pnpm i
       - run: pnpm run build
       - uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
@@ -76,8 +78,8 @@ jobs:
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version-file: .node-version
-          package-manager-cache: false
-      - run: npm install -g pnpm@latest-10
+      - run: npm install -g corepack
+      - run: corepack enable
       - run: pnpm i
       - run: pnpm run check
       - uses: int128/update-generated-files-action@9771e63f01e6f91b14f6a8fb378220dbe944c20a # v2.81.0
