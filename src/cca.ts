@@ -19,7 +19,6 @@ export const parseExecutionFile = async (executionFilePath: string): Promise<Exe
   core.summary.addRaw(`<details>`)
   core.summary.addCodeBlock(JSON.stringify(executionFileObject, null, 2), 'json')
   core.summary.addRaw(`</details>`)
-  await core.summary.write()
 
   const steps = ExecutionSchema.parse(executionFileObject)
   const lastStep = steps.pop()
