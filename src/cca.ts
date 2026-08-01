@@ -14,7 +14,13 @@ export type Execution = {
 
 export const parseExecutionFile = async (executionFilePath: string): Promise<Execution> => {
   const executionFileContent = await fs.readFile(executionFilePath, 'utf-8')
-  const steps = ExecutionSchema.parse(JSON.parse(executionFileContent))
+  const executionFileObject = JSON.parse(executionFileContent)
+
+  core.summary.addRaw(`<details>`)
+  core.summary.addCodeBlock(JSON.stringify(executionFileObject, null, 2), 'json')
+  core.summary.addRaw(`</details>`)
+
+  const steps = ExecutionSchema.parse(executionFileObject)
   const lastStep = steps.pop()
   if (!lastStep || lastStep.total_cost_usd === undefined) {
     throw new Error(`Invalid execution file`)
