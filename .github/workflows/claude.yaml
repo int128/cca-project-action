@@ -32,15 +32,16 @@ jobs:
           node-version-file: .node-version
       - run: npm install -g corepack
       - run: corepack enable
-      # - run: pnpm i
-      # - run: pnpm run build
+      - run: pnpm i
+      - run: pnpm run build
       - id: claude-code-action
         uses: anthropics/claude-code-action@be7b93b1907a4abad570368f3c74b6fe3807510b # v1.0.183
         with:
           anthropic_federation_rule_id: fdrl_01U5YGZDuTp2QGxbJJJkiMsD
           anthropic_organization_id: 10a77efe-67f8-4a56-905a-c3dd6337950a
           anthropic_service_account_id: svac_0178gBsVJQy7TX5Fxbkq6RFb
-      # - name: Run int128/cca-project-action
-      #   uses: ./
-      #   with:
-      #     execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
+      - if: always()
+        name: Run int128/cca-project-action
+        uses: ./
+        with:
+          execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
