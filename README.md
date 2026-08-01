@@ -1,4 +1,4 @@
-# cca-project-action [![ts](https://github.com/int128/typescript-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/typescript-action/actions/workflows/ts.yaml)
+# cca-usage-action [![ts](https://github.com/int128/typescript-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/typescript-action/actions/workflows/ts.yaml)
 
 This is an action to track the usage of claude-code-action in a GitHub project.
 It is useful to improve the user experience and optimize the cost for AI interactions.
@@ -75,7 +75,7 @@ jobs:
 
       # Add to the project even if claude-code-action fails, to track the user experience and cost.
       - if: always()
-        uses: int128/cca-project-action@v1
+        uses: int128/cca-usage-action@v1
         with:
           token: ${{ steps.token.outputs.token }}
           execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
@@ -100,7 +100,7 @@ jobs:
       - id: claude-code-action
         uses: anthropics/claude-code-action@v1
       - if: always()
-        uses: int128/cca-project-action@v1
+        uses: int128/cca-usage-action@v1
         with:
           token: ${{ steps.token.outputs.token }}
           execution-file: ${{ steps.claude-code-action.outputs.execution_file }}

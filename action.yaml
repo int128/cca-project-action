@@ -1,4 +1,4 @@
-name: cca-project-action
+name: cca-usage-action
 description: Track the usage of claude-code-action in a GitHub project
 inputs:
   execution-file:
