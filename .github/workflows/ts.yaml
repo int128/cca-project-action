@@ -54,7 +54,7 @@ jobs:
         name: Run claude-code-action (mock)
         run: |
           echo 'execution_file=tests/fixtures/execution_file.json' >> "$GITHUB_OUTPUT"
-      - name: Run int128/cca-project-action
+      - name: Run int128/cca-usage-action
         uses: ./
         with:
           token: ${{ steps.token.outputs.token }}
