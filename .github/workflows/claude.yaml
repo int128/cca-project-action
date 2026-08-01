@@ -40,7 +40,8 @@ jobs:
           anthropic_federation_rule_id: fdrl_01U5YGZDuTp2QGxbJJJkiMsD
           anthropic_organization_id: 10a77efe-67f8-4a56-905a-c3dd6337950a
           anthropic_service_account_id: svac_0178gBsVJQy7TX5Fxbkq6RFb
-      - name: Run int128/cca-project-action
+      - if: always()
+        name: Run int128/cca-project-action
         uses: ./
         with:
           execution-file: ${{ steps.claude-code-action.outputs.execution_file }}
