@@ -14,6 +14,8 @@ export type Execution = {
 
 export const parseExecutionFile = async (executionFilePath: string): Promise<Execution> => {
   const executionFileContent = await fs.readFile(executionFilePath, 'utf-8')
+  core.summary.addCodeBlock(executionFileContent, 'json')
+  await core.summary.write()
   const steps = ExecutionSchema.parse(JSON.parse(executionFileContent))
   const lastStep = steps.pop()
   if (!lastStep || lastStep.total_cost_usd === undefined) {
