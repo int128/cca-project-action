@@ -141,7 +141,7 @@ You can find the field option IDs using the following command:
 | Name                              | Description                                            |
 | --------------------------------- | ------------------------------------------------------ |
 | `execution-file`                  | The path to the execution file from claude-code-action |
-| `project-id`                      | The project ID (required)                              |
+| `project-id`                      | The project ID                                         |
 | `project-field-id-last-called-at` | The field ID for the last called date                  |
 | `project-field-id-calls`          | The field ID for the cumulative calls                  |
 | `project-field-id-cost-usd`       | The field ID for the cumulative cost in USD            |

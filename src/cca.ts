@@ -1,4 +1,5 @@
 import * as fs from 'node:fs/promises'
+import * as core from '@actions/core'
 import * as z from 'zod'
 
 const ExecutionSchema = z.array(
@@ -20,5 +21,19 @@ export const parseExecutionFile = async (executionFilePath: string): Promise<Exe
   }
   return {
     costUsd: lastStep.total_cost_usd,
+  }
+}
+
+export const parseExecutionFileSafe = async (executionFilePath: string | undefined): Promise<Execution | null> => {
+  if (!executionFilePath) {
+    core.info(`No execution file provided`)
+    return null
+  }
+  core.info(`Parsing the execution file: ${executionFilePath}`)
+  try {
+    return await parseExecutionFile(executionFilePath)
+  } catch (error) {
+    core.warning(`Invalid execution file: ${executionFilePath}: ${error}`)
+    return null
   }
 }

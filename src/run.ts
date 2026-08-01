@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import * as core from '@actions/core'
 import type { Octokit } from '@octokit/action'
 import { addIssueToProject } from './addIssueToProject.js'
-import { parseExecutionFile } from './cca.js'
+import { type Execution, parseExecutionFileSafe } from './cca.js'
 import type { Context } from './github.js'
 import { getCurrentIssue } from './issue.js'
 import { updateProjectFieldDateValue } from './queries/updateProjectFieldDateValue.js'
@@ -11,7 +11,7 @@ import { updateProjectFieldSingleSelectValue } from './queries/updateProjectFiel
 
 type Inputs = {
   executionFile: string | undefined
-  projectId: string
+  projectId: string | undefined
   projectFieldIdCalls: string | undefined
   projectFieldIdLastCalledAt: string | undefined
   projectFieldIdCostUsd: string | undefined
@@ -24,6 +24,16 @@ type Outputs = {
 }
 
 export const run = async (inputs: Inputs, octokit: Octokit, context: Context): Promise<Outputs | undefined> => {
+  const execution = await parseExecutionFileSafe(inputs.executionFile)
+  if (inputs.projectId) {
+    return await addToProject(execution, inputs, octokit, context)
+  }
+  return
+}
+
+const addToProject = async (execution: Execution | null, inputs: Inputs, octokit: Octokit, context: Context) => {
+  assert(inputs.projectId, `project-id is required in addToProject()`)
+
   const issue = await getCurrentIssue(octokit, context)
   if (issue === undefined) {
     core.warning(`No issue or pull request found for the current context.`)
@@ -78,26 +88,18 @@ export const run = async (inputs: Inputs, octokit: Octokit, context: Context): P
     core.info(`Updated the calls field to ${cumulativeCalls}`)
   }
 
-  if (inputs.executionFile === undefined) {
-    core.info(`No execution file provided, skipping the cost calculation.`)
-    return {
-      cumulativeCalls,
-      cumulativeCostUsd,
+  if (execution !== null) {
+    core.info(`The cost of current workflow run is ${execution.costUsd} USD`)
+    if (inputs.projectFieldIdCostUsd) {
+      cumulativeCostUsd = (cumulativeCostUsd ?? 0) + execution.costUsd
+      await updateProjectFieldNumberValue(octokit, {
+        itemId: addIssueToProjectResponse.itemId,
+        projectId: inputs.projectId,
+        fieldId: inputs.projectFieldIdCostUsd,
+        number: cumulativeCostUsd,
+      })
+      core.info(`Updated the cost-usd field to ${cumulativeCostUsd} USD`)
     }
-  }
-  core.info(`Parsing the execution file: ${inputs.executionFile}`)
-  const execution = await parseExecutionFile(inputs.executionFile)
-  core.info(`The cost of current workflow run is ${execution.costUsd} USD`)
-
-  if (inputs.projectFieldIdCostUsd) {
-    cumulativeCostUsd = (cumulativeCostUsd ?? 0) + execution.costUsd
-    await updateProjectFieldNumberValue(octokit, {
-      itemId: addIssueToProjectResponse.itemId,
-      projectId: inputs.projectId,
-      fieldId: inputs.projectFieldIdCostUsd,
-      number: cumulativeCostUsd,
-    })
-    core.info(`Updated the cost-usd field to ${cumulativeCostUsd} USD`)
   }
 
   return {
