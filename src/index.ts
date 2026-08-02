@@ -3,7 +3,6 @@ import { getContext, getOctokit } from './github.js'
 import { run } from './run.js'
 
 try {
-  core.summary.addHeading('cca-usage-action summary', 2)
   const outputs = await run(
     {
       executionFile: core.getInput('execution-file') || undefined,

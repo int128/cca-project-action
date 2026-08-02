@@ -2,44 +2,46 @@ import * as fs from 'node:fs/promises'
 import * as core from '@actions/core'
 import * as z from 'zod'
 
-const ExecutionSchema = z.array(
-  z.object({
+const Execution = z.array(
+  z.looseObject({
+    type: z.string(),
+    message: z
+      .looseObject({
+        content: z
+          .array(
+            z.looseObject({
+              text: z.string().optional(),
+            }),
+          )
+          .optional(),
+      })
+      .optional(),
+    result: z.string().optional(),
     total_cost_usd: z.number().optional(),
   }),
 )
 
-export type Execution = {
-  costUsd: number
-}
+export type Execution = z.infer<typeof Execution>
 
-export const parseExecutionFile = async (executionFilePath: string): Promise<Execution> => {
-  const executionFileContent = await fs.readFile(executionFilePath, 'utf-8')
-  const executionFileObject = JSON.parse(executionFileContent)
-
-  core.summary.addRaw(`<details>`)
-  core.summary.addCodeBlock(JSON.stringify(executionFileObject, null, 2), 'json')
-  core.summary.addRaw(`</details>`)
-
-  const steps = ExecutionSchema.parse(executionFileObject)
-  const lastStep = steps.pop()
-  if (!lastStep || lastStep.total_cost_usd === undefined) {
-    throw new Error(`Invalid execution file`)
-  }
-  return {
-    costUsd: lastStep.total_cost_usd,
-  }
-}
-
-export const parseExecutionFileSafe = async (executionFilePath: string | undefined): Promise<Execution | null> => {
+export const parseExecutionFile = async (executionFilePath: string | undefined): Promise<Execution | null> => {
   if (!executionFilePath) {
     core.info(`No execution file provided`)
     return null
   }
   core.info(`Parsing the execution file: ${executionFilePath}`)
   try {
-    return await parseExecutionFile(executionFilePath)
+    const executionFileContent = await fs.readFile(executionFilePath, 'utf-8')
+    return Execution.parse(JSON.parse(executionFileContent))
   } catch (error) {
     core.warning(`Invalid execution file: ${executionFilePath}: ${error}`)
     return null
   }
+}
+
+export const getCostUsdFromExecution = (execution: Execution | null): number | null => {
+  const lastStep = execution?.at(-1)
+  if (lastStep?.total_cost_usd !== undefined) {
+    return lastStep.total_cost_usd
+  }
+  return null
 }
