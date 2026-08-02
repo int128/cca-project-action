@@ -4,8 +4,8 @@ import type { Execution } from './cca.js'
 export const writeSummary = (execution: Execution) => {
   core.summary.addHeading('cca-usage-action summary', 2)
 
-  for (const step of execution) {
-    core.summary.addHeading(`${step.type}`, 3)
+  for (const [i, step] of execution.entries()) {
+    core.summary.addHeading(`(${i + 1}) ${step.type}`, 3)
     if (step.result !== undefined) {
       core.summary.addRaw('<p>')
       core.summary.addRaw(step.result)
